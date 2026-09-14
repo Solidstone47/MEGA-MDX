@@ -1,0 +1,33 @@
+name: Run MEGA-MDX Bot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg libwebp-dev
+
+    - name: Install Project Dependencies
+      run: npm install
+
+    - name: Build TypeScript Code
+      run: npm run build
+
+    - name: Start WhatsApp Bot
+      env:
+        SESSION_ID: ${{ secrets.SESSION_ID }}
+      run: npm start
